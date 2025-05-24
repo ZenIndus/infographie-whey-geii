@@ -1,1 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographie: Tendances du Marché Whey Protéine 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Application Structure Plan: L'infographie est une page unique déroulante, structurée en sections thématiques pour raconter une histoire sur les tendances du marché de la whey. 
+        1. Introduction: Vue d'ensemble du marché et des tendances clés (qualité, transparence).
+        2. Segmentation du Marché: Visualisation des parts des différents types de whey, mettant en avant la montée en puissance de la "Native Isolate".
+        3. Critères de Qualité Moteurs: Focus sur les facteurs comme le taux de protéines, la faible teneur en lactose, l'origine du lait et les processus de fabrication qui façonnent le marché.
+        4. Paysage Concurrentiel: Comparaison de marques clés sur des critères multiples via un graphique radar.
+        5. Enjeu du "Protein Spiking": Explication du phénomène et impact des analyses indépendantes, illustré par des données comparatives.
+        6. Tendances Consommateurs: Le dilemme goût vs. pureté.
+        7. Perspectives: Évolution future vers plus de transparence et de produits naturels.
+        Cette structure a été choisie pour guider l'utilisateur de manière logique à travers les complexités du marché, en partant d'une vue d'ensemble pour aller vers des analyses plus spécifiques et des tendances prospectives, favorisant ainsi une compréhension progressive et aisée. Une barre de navigation fixe en haut facilitera la navigation rapide entre les sections.
+    -->
+    <!-- Visualization & Content Choices: 
+        - Section 1 (Introduction): Texte. Objectif: Informer. Justification: Cadrer le sujet.
+        - Section 2 (Segmentation): Donut Chart (Chart.js) pour les types de whey (Isolat, Native Isolat, Concentrée, Hydrolysée). Objectif: Comparer (composition). Justification: Visualiser les parts d'un tout. Callout texte pour "Native Isolate". Objectif: Informer.
+        - Section 3 (Critères Qualité): "Big Numbers" (HTML/CSS) pour taux de protéines idéal (>85-90%) et faible lactose (<0.5%). Bar Chart (Chart.js) pour lactose (Idéal vs. Typique). Objectif: Informer, Comparer. Justification: Impact visuel, comparaison simple. Icônes Unicode (🐄, ❄️) + texte (HTML/CSS) pour origine lait et filtration. Objectif: Informer. Justification: Visuel simple.
+        - Section 4 (Paysage Concurrentiel): Radar Chart (Chart.js) comparant Nutri&Co, Nutripure, PURE AM, Optimum sur Protéines (%), Pureté Additifs (score 1-5), Origine Lait (score 1-5), Prix (€/kg - normalisé inversé), Transparence (score 1-5). Objectif: Comparer. Justification: Comparaison multidimensionnelle.
+        - Section 5 ("Protein Spiking"): Diagramme simple (HTML/CSS avec flexbox/borders) pour expliquer le processus. Grouped Bar Chart (Chart.js) pour Protéines Annoncées vs. Mesurées (ex: BiotechUSA, Coretech). Objectif: Organiser, Comparer. Justification: Explication de flux, comparaison directe.
+        - Section 6 (Tendances Consommateurs): Liste à deux colonnes (HTML/CSS) pour Goût vs. Pureté. Objectif: Organiser, Comparer. Justification: Comparaison claire.
+        - Section 7 (Perspectives): Texte. Objectif: Informer. Justification: Conclure sur les évolutions.
+        - Confirmation: NO SVG graphics used. NO Mermaid JS used. Chart.js (Canvas) pour tous les graphiques. Diagrammes simples en HTML/CSS.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .chart-container { position: relative; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; height: 300px; max-height: 350px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; max-height: 400px; max-width: 600px;} }
+        .nav-link { @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-yellow-100 hover:text-gray-900; }
+        .nav-link-active { @apply bg-yellow-400 text-gray-900; }
+        .infographic-title { @apply text-4xl font-extrabold text-green-600 mb-4 text-center; }
+        .section-title { @apply text-3xl font-bold text-green-500 mt-12 mb-6 text-center; }
+        .subsection-title { @apply text-xl font-semibold text-green-600 mt-6 mb-3; }
+        .card { @apply bg-white p-6 rounded-xl shadow-xl mb-8; }
+        .big-number { @apply text-5xl font-bold text-yellow-400; }
+        .icon-text { @apply flex items-center text-lg; }
+        .icon-text span:first-child { @apply text-3xl mr-3; }
+        .flow-step { @apply bg-gray-100 p-3 rounded-lg shadow-md text-center min-w-[120px] md:min-w-[150px]; }
+        .flow-arrow { @apply text-3xl text-green-500 mx-2 hidden md:block; }
+        .flow-arrow-mobile { @apply text-3xl text-green-500 my-2 md:hidden; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-green-600">Whey Tendances 2025</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1">
+                        <a href="#intro" class="nav-link">Intro</a>
+                        <a href="#segmentation" class="nav-link">Types</a>
+                        <a href="#qualite" class="nav-link">Qualité</a>
+                        <a href="#acteurs" class="nav-link">Acteurs</a>
+                        <a href="#spiking" class="nav-link">Spiking</a>
+                        <a href="#conso" class="nav-link">Conso</a>
+                        <a href="#perspectives" class="nav-link">Avenir</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:text-green-600 hover:bg-yellow-100">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <a href="#intro" class="block nav-link">Introduction</a>
+            <a href="#segmentation" class="block nav-link">Types de Whey</a>
+            <a href="#qualite" class="block nav-link">Critères de Qualité</a>
+            <a href="#acteurs" class="block nav-link">Acteurs du Marché</a>
+            <a href="#spiking" class="block nav-link">Protein Spiking</a>
+            <a href="#conso" class="block nav-link">Tendances Consommateurs</a>
+            <a href="#perspectives" class="block nav-link">Perspectives</a>
+        </div>
+    </nav>
+
+    <header class="py-10 bg-green-500 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="infographic-title !text-white">Tendances du Marché de la Whey Protéine 2025</h1>
+            <p class="text-xl text-center text-green-100">Qualité, Transparence et Choix des Consommateurs au Cœur des Évolutions</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+
+        <section id="intro" class="pt-16 -mt-16">
+            <div class="card">
+                <h2 class="section-title">Le Marché de la Whey en Pleine Mutation</h2>
+                <p class="text-lg mb-4">Le marché de la protéine de lactosérum (whey) est dynamique et en constante évolution. Autrefois chasse gardée des athlètes, la whey séduit aujourd'hui un public plus large, conscient de ses bénéfices pour la récupération, le maintien musculaire et même la gestion du poids. Cette démocratisation s'accompagne d'une exigence accrue des consommateurs.</p>
+                <p class="text-lg">Deux tendances majeures se dessinent : une quête de <strong>qualité supérieure</strong> (pureté, origine, processus de fabrication) et une demande croissante de <strong>transparence</strong> de la part des marques. Naviguer ce marché complexe requiert une compréhension fine des critères qui définissent réellement une whey d'excellence.</p>
+            </div>
+        </section>
+
+        <section id="segmentation" class="pt-16 -mt-16">
+            <h2 class="section-title">Segmentation du Marché : Les Différents Visages de la Whey</h2>
+            <div class="card">
+                <p class="text-lg mb-6">Le marché de la whey se compose de plusieurs types de produits, chacun avec ses spécificités. La popularité relative de ces segments reflète les diverses attentes des consommateurs en termes de pureté, d'assimilation et de budget.</p>
+                <div class="chart-container mx-auto mb-6">
+                    <canvas id="wheyTypesChart"></canvas>
+                </div>
+                <div class="text-center">
+                    <h3 class="subsection-title">⭐ L'Ascension de la Whey Isolate Native ⭐</h3>
+                    <p class="text-lg">La <strong>Whey Isolate Native</strong> gagne du terrain comme le segment premium. Extraite directement du lait frais par filtration à froid, elle conserve une intégrité protéique maximale et une pureté élevée, répondant à la demande des consommateurs les plus exigeants.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="qualite" class="pt-16 -mt-16">
+            <h2 class="section-title">Critères de Qualité Clés : Moteurs des Tendances du Marché</h2>
+            <div class="card">
+                <p class="text-lg mb-6">Les consommateurs sont de plus en plus informés et recherchent des garanties précises sur la qualité des produits. Plusieurs critères sont devenus déterminants dans leurs choix et orientent les stratégies des fabricants.</p>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center">
+                        <p class="text-gray-600 text-sm uppercase tracking-wider">Taux de Protéines Idéal</p>
+                        <p class="big-number">>85-90%</p>
+                        <p class="text-md text-gray-700">Pour les isolats de haute qualité.</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-gray-600 text-sm uppercase tracking-wider">Teneur en Lactose</p>
+                        <p class="big-number"><0.5%</p>
+                        <p class="text-md text-gray-700">Crucial pour la digestibilité.</p>
+                    </div>
+                </div>
+                <div class="mt-8 grid md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 p-4 rounded-lg shadow">
+                        <div class="icon-text mb-2"><span>🐄</span><span>Origine du Lait : Le "Made in France" Privilégié</span></div>
+                        <p>La tendance est au lait de pâturage français, gage de qualité, de traçabilité et de respect du bien-être animal.</p>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg shadow">
+                        <div class="icon-text mb-2"><span>❄️</span><span>Fabrication : Filtration à Froid</span></div>
+                        <p>Les procédés doux comme la microfiltration à froid sont plébiscités pour préserver l'intégrité des protéines.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="acteurs" class="pt-16 -mt-16">
+            <h2 class="section-title">Paysage Concurrentiel : Positionnement des Acteurs Clés</h2>
+            <div class="card">
+                <p class="text-lg mb-6">Le marché de la whey est animé par de nombreux acteurs, des marques spécialisées aux géants de la nutrition sportive. Leur positionnement varie grandement selon leur engagement envers la qualité, la transparence et leur stratégie prix. Le graphique radar ci-dessous compare quelques marques notables sur des critères clés.</p>
+                <div class="chart-container mx-auto">
+                    <canvas id="brandsRadarChart"></canvas>
+                </div>
+                <p class="text-sm text-center mt-4 text-gray-600">Scores de 1 (moins bon) à 5 (meilleur). Prix: score plus élevé = plus abordable.</p>
+            </div>
+        </section>
+
+        <section id="spiking" class="pt-16 -mt-16">
+            <h2 class="section-title">L'Enjeu du "Protein Spiking" et la Force des Analyses</h2>
+            <div class="card">
+                <p class="text-lg mb-4">Une pratique trompeuse, le "protein spiking", consiste à ajouter des acides aminés bas de gamme pour gonfler artificiellement le taux de protéines affiché. Cela souligne l'importance cruciale des analyses par des laboratoires indépendants.</p>
+                <h3 class="subsection-title text-center">Comprendre le "Protein Spiking"</h3>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 my-6">
+                    <div class="flow-step">Allégation Fabricant<br/>(Ex: 90% Protéines)</div>
+                    <div class="flow-arrow md:block hidden">➡️</div> <div class="flow-arrow-mobile md:hidden">⬇️</div>
+                    <div class="flow-step">Ajout Acides Aminés<br/>(Ex: Glycine, Taurine)</div>
+                    <div class="flow-arrow md:block hidden">➡️</div> <div class="flow-arrow-mobile md:hidden">⬇️</div>
+                    <div class="flow-step">Test Azote Gonflé<br/>(Apparence de 90%)</div>
+                    <div class="flow-arrow md:block hidden">➡️</div> <div class="flow-arrow-mobile md:hidden">⬇️</div>
+                    <div class="flow-step">Analyse Labo Indép.<br/>(Protéines Réelles <90%)</div>
+                </div>
+                <p class="text-lg mb-6">Des organismes comme Nutricontrole.fr jouent un rôle essentiel en révélant les écarts entre les étiquettes et la réalité, poussant le marché vers plus d'honnêteté.</p>
+                <h3 class="subsection-title text-center">Protéines Annoncées vs. Mesurées : Exemples Chocs</h3>
+                <div class="chart-container mx-auto">
+                    <canvas id="spikingChart"></canvas>
+                </div>
+                <p class="text-sm text-center mt-4 text-gray-600">Données illustratives basées sur les analyses de Nutricontrole.fr (Tableau 3 du rapport).</p>
+            </div>
+        </section>
+
+        <section id="conso" class="pt-16 -mt-16">
+            <h2 class="section-title">Tendances Consommateurs : Le Dilemme Goût vs. Pureté</h2>
+            <div class="card">
+                <p class="text-lg mb-6">Un défi majeur pour les fabricants est de concilier la demande pour des produits "purs" (sans additifs artificiels, édulcorants de synthèse) et le désir d'un goût agréable. Cette tension façonne les offres et les choix des consommateurs.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-green-700 mb-3 text-center">🌿 Priorité Pureté & Naturalité</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            <li>Listes d'ingrédients courtes</li>
+                            <li>Arômes et édulcorants naturels (ex: Stévia)</li>
+                            <li>Absence d'additifs controversés</li>
+                            <li>Traçabilité (origine du lait)</li>
+                            <li>Quitte à faire un compromis sur l'intensité du goût</li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold text-yellow-700 mb-3 text-center">😋 Priorité Goût & Plaisir</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            <li>Large choix de saveurs intenses</li>
+                            <li>Texture et miscibilité optimales</li>
+                            <li>Souvent obtenu avec des édulcorants (parfois artificiels)</li>
+                            <li>Peut impliquer une liste d'ingrédients plus longue</li>
+                            <li>Compromis possible sur la "naturalité" absolue</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="perspectives" class="pt-16 -mt-16">
+            <h2 class="section-title">Perspectives du Marché : Vers Plus de Transparence et de Qualité</h2>
+            <div class="card">
+                <p class="text-lg mb-4">Le marché de la whey protéine continuera probablement d'évoluer vers une plus grande exigence de la part des consommateurs. La demande pour des produits de haute qualité, avec une traçabilité claire et des formulations "propres" (ingrédients naturels, sans additifs controversés) devrait s'intensifier.</p>
+                <p class="text-lg mb-4">Les marques qui investissent dans la transparence, en fournissant par exemple des analyses de laboratoires indépendants et en étant claires sur leurs processus de fabrication et l'origine de leurs matières premières, gagneront la confiance et la fidélité des consommateurs.</p>
+                <p class="text-lg">L'innovation portera aussi sur l'amélioration du goût des produits naturels et sur des solutions pour optimiser la digestibilité. Le segment "Native Isolate" est bien positionné pour croître, répondant à cette quête d'excellence.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 text-center p-8 mt-12">
+        <p>&copy; 2025 Infographie sur les Tendances du Marché de la Whey Protéine.</p>
+        <p class="text-sm">Basé sur le "Guide Complet : Choisir la Meilleure Whey Protéine en 2025".</p>
+    </footer>
+
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+        
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+
+        function updateActiveLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 80) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('nav-link-active');
+                const href = link.getAttribute('href');
+                if (href && href.includes(current)) {
+                    link.classList.add('nav-link-active');
+                }
+            });
+        }
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink(); // Initial call
+
+        function wrapLabel(str, maxWidth = 16) {
+            if (typeof str !== 'string') return str;
+            if (str.length <= maxWidth) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            }
+            lines.push(currentLine.trim());
+            return lines.filter(line => line.length > 0);
+        }
+
+        const tooltipTitleCallback = function(tooltipItems) {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#1F2937' } },
+                tooltip: {
+                    callbacks: { title: tooltipTitleCallback },
+                    backgroundColor: '#1F2937',
+                    titleColor: '#F9FAFB',
+                    bodyColor: '#F9FAFB',
+                    borderColor: '#FACC15',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                x: { ticks: { color: '#1F2937' }, grid: { display: false } },
+                y: { ticks: { color: '#1F2937' }, grid: { color: '#E5E7EB' } }
+            }
+        };
+        
+        const chartColors = ['#22C55E', '#FACC15', '#3B82F6', '#EF4444', '#A855F7'];
+
+        const wheyTypesCtx = document.getElementById('wheyTypesChart')?.getContext('2d');
+        if (wheyTypesCtx) {
+            new Chart(wheyTypesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Isolate', 'Native Isolate', 'Concentrée', 'Hydrolysée'],
+                    datasets: [{
+                        label: 'Parts de Marché Estimées',
+                        data: [40, 25, 25, 10],
+                        backgroundColor: chartColors,
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: { ...commonChartOptions, cutout: '60%' }
+            });
+        }
+
+        const brandsRadarCtx = document.getElementById('brandsRadarChart')?.getContext('2d');
+        if (brandsRadarCtx) {
+            const brandData = {
+                labels: [wrapLabel('Protéines (%)'), wrapLabel('Pureté Additifs'), wrapLabel('Origine Lait'), wrapLabel('Prix Abordable'), wrapLabel('Transparence (Labo)')],
+                datasets: [
+                    {
+                        label: 'Nutri&Co',
+                        data: [4.7, 5, 5, 2.26, 5], // 94% -> 4.7/5 (approx)
+                        borderColor: chartColors[0], backgroundColor: chartColors[0] + '40', pointBackgroundColor: chartColors[0]
+                    },
+                    {
+                        label: 'Nutripure',
+                        data: [4.5, 5, 5, 1, 4], // 90% -> 4.5/5
+                        borderColor: chartColors[1], backgroundColor: chartColors[1] + '40', pointBackgroundColor: chartColors[1]
+                    },
+                    {
+                        label: 'PURE AM Nutrition',
+                        data: [4.55, 3, 4, 5, 2], // 91% -> 4.55/5
+                        borderColor: chartColors[2], backgroundColor: chartColors[2] + '40', pointBackgroundColor: chartColors[2]
+                    },
+                    {
+                        label: 'Optimum Nutrition',
+                        data: [3.85, 3, 2, 4.13, 3], // 77% -> 3.85/5
+                        borderColor: chartColors[3], backgroundColor: chartColors[3] + '40', pointBackgroundColor: chartColors[3]
+                    }
+                ]
+            };
+            new Chart(brandsRadarCtx, {
+                type: 'radar',
+                data: brandData,
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#D1D5DB' },
+                            grid: { color: '#D1D5DB' },
+                            pointLabels: { color: '#1F2937', font: {size: 10} },
+                            ticks: { color: '#F9FAFB', backdropColor: '#4B5563', stepSize: 1, display: true },
+                            min: 0, max: 5
+                        }
+                    },
+                    elements: { line: { borderWidth: 2 }, point: { radius: 3 } }
+                }
+            });
+        }
+
+        const spikingCtx = document.getElementById('spikingChart')?.getContext('2d');
+        if (spikingCtx) {
+            new Chart(spikingCtx, {
+                type: 'bar',
+                data: {
+                    labels: [wrapLabel('BiotechUSA Iso Zero'), wrapLabel('Coretech Pistache')],
+                    datasets: [
+                        {
+                            label: 'Protéines Annoncées (%)',
+                            data: [80, 90],
+                            backgroundColor: chartColors[0] + '90',
+                            borderColor: chartColors[0],
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Protéines Mesurées (%)',
+                            data: [79.4, 12.6],
+                            backgroundColor: chartColors[3] + '90',
+                            borderColor: chartColors[3],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: { ...commonChartOptions.scales, y: {...commonChartOptions.scales.y, suggestedMax: 100 }}
+                }
+            });
+        }
+    </script>
+</body>
+</html>
 # infographie-whey-geii
